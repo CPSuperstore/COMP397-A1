@@ -25,18 +25,34 @@ var game = (function () {
     // ]
     var calculated = true;
     var cheatMode = false;
-    var betAmount = 0;
+    var betAmount = -1;
     var betAmountLabel;
-    var wallet = 1000;
+    var wallet = -1;
     var walletLabel;
     var SLOT_START_X = [135, 245, 350, 460, 570];
     var SLOT_START_Y = 560;
     var SLOT_Y_OFFSET = 130;
     var SPINNER_ROWS = 10;
+    function ResetGame(reloadText, walletAmount, bet) {
+        if (reloadText === void 0) { reloadText = true; }
+        if (walletAmount === void 0) { walletAmount = 1000; }
+        if (bet === void 0) { bet = 0; }
+        if (reloadText) {
+            ChangeBetAmount(-betAmount, false);
+            ChangeWallet(-wallet);
+            ChangeWallet(walletAmount);
+            ChangeBetAmount(bet, false);
+        }
+        else {
+            betAmount = 0;
+            wallet = walletAmount;
+        }
+    }
     function Start() {
         stage = new createjs.Stage(canvas);
         createjs.Ticker.framerate = 60; // Declare the framerate at 60fps
         createjs.Ticker.on("tick", Update);
+        ResetGame(false);
         Main();
     }
     function checkRange(value, lowerBounds, upperBounds) {
@@ -158,18 +174,18 @@ var game = (function () {
             }
             switch (row) {
                 case 0:
-                    multiplierLineOne.setText("< " + Round(multiplier));
+                    multiplierLineOne.setText("x" + Round(multiplier));
                     break;
                 case 1:
-                    multiplierLineTwo.setText("< " + Round(multiplier));
+                    multiplierLineTwo.setText("x" + Round(multiplier));
                     break;
                 case 2:
-                    multiplierLineThree.setText("< " + Round(multiplier));
+                    multiplierLineThree.setText("x" + Round(multiplier));
                     break;
             }
             totalMultiplier *= multiplier;
         }
-        multiplierTotal.setText("> " + Round(totalMultiplier));
+        multiplierTotal.setText("Total: x" + Round(totalMultiplier));
         return Round(totalMultiplier);
     }
     function Round(input) {
@@ -192,19 +208,17 @@ var game = (function () {
         stage.addChild(new objects.Button("./Assets/images/buttons/plus100.png", 412, 500, false, function () {
             ChangeBetAmount(100);
         }));
-        stage.addChild(new objects.Button("./Assets/images/buttons/reset.png", 10, 635, false, function () {
-            ChangeBetAmount(100);
-        }));
+        stage.addChild(new objects.Button("./Assets/images/buttons/reset.png", 10, 635, false, ResetGame));
         stage.addChild(new objects.Button("./Assets/images/buttons/quit.png", 144, 635, false, function () {
             ChangeBetAmount(100);
         }));
-        multiplierLineOne = new objects.Label("< ", "20px", "Consolas", "green", 625, 170, false);
+        multiplierLineOne = new objects.Label("x?", "20px", "Consolas", "green", 625, 170, false);
         stage.addChild(multiplierLineOne);
-        multiplierLineTwo = new objects.Label("< ", "20px", "Consolas", "green", 625, 295, false);
+        multiplierLineTwo = new objects.Label("x?", "20px", "Consolas", "green", 625, 295, false);
         stage.addChild(multiplierLineTwo);
-        multiplierLineThree = new objects.Label("< ", "20px", "Consolas", "green", 625, 425, false);
+        multiplierLineThree = new objects.Label("x?", "20px", "Consolas", "green", 625, 425, false);
         stage.addChild(multiplierLineThree);
-        multiplierTotal = new objects.Label("> ", "20px", "Consolas", "green", 625, 555, false);
+        multiplierTotal = new objects.Label("Total: x?", "25px", "Consolas", "green", 278, 568, false);
         stage.addChild(multiplierTotal);
         betAmountLabel = new objects.Label("Bet: $" + betAmount, "30px", "Consolas", "green", 10, 565, false);
         stage.addChild(betAmountLabel);
