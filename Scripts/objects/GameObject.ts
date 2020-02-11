@@ -10,6 +10,8 @@ module objects
         private _position:Vector2;
         private _isColliding:boolean;
         
+        public imageName:string;
+        
         // PUBLIC PROPERTIES
         get width():number
         {
@@ -65,12 +67,18 @@ module objects
             this._isColliding = newState;
         }
 
+        public SetImage(path:string):void{
+            this.image = new createjs.Bitmap(path).image;
+        }
+
 
         // CONSTRUCTOR
         constructor(imageString:string = "./Assets/images/placeholder.png", 
         x:number = 0, y:number = 0, centered:boolean = false)
         {
             super(imageString);
+
+            this.imageName = imageString;
 
             // initialization
             this._width = 0;

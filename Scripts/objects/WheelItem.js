@@ -17,16 +17,21 @@ var objects;
     var WheelItem = /** @class */ (function (_super) {
         __extends(WheelItem, _super);
         // constructor
-        function WheelItem(imagePath, x, y, isCentered) {
-            if (x === void 0) { x = 0; }
-            if (y === void 0) { y = 0; }
-            if (isCentered === void 0) { isCentered = false; }
-            var _this = _super.call(this, imagePath, x, y, isCentered) || this;
+        function WheelItem(name) {
+            var _this = _super.call(this, "./Assets/images/machineParts/icons/" + name + ".png", 0, 0, true) || this;
             _this.velocity = 4;
+            _this.itemName = name;
             _this.Start();
             _this.spinning = false;
             return _this;
         }
+        WheelItem.prototype.GetName = function () {
+            return this.itemName;
+        };
+        WheelItem.prototype.SetPosition = function (x, y) {
+            this.x = x;
+            this.y = y;
+        };
         // PRIVATE METHODS
         WheelItem.prototype._checkBounds = function () {
         };

@@ -23,6 +23,7 @@ var objects;
             if (y === void 0) { y = 0; }
             if (centered === void 0) { centered = false; }
             var _this = _super.call(this, imageString) || this;
+            _this.imageName = imageString;
             // initialization
             _this._width = 0;
             _this._height = 0;
@@ -100,6 +101,9 @@ var objects;
             enumerable: true,
             configurable: true
         });
+        GameObject.prototype.SetImage = function (path) {
+            this.image = new createjs.Bitmap(path).image;
+        };
         // PRIVATE METHODS
         GameObject.prototype._computeHalfWidth = function () {
             return this.width * 0.5;
