@@ -7,6 +7,10 @@ var game = (function () {
     var stage;
     var playButton;
     var slotItems;
+    var multiplierLineOne;
+    var multiplierLineTwo;
+    var multiplierLineThree;
+    var multiplierTotal;
     // Array Structure:
     // [
     //  1  | 1  | 1  | 1  | 1 
@@ -20,7 +24,7 @@ var game = (function () {
     //  9  | 9  | 9  | 9  | 9 
     //  10 | 10 | 10 | 10 | 10
     // ]
-    var calculated;
+    var calculated = true;
     var SLOT_START_X = [135, 245, 350, 460, 570];
     var SLOT_START_Y = 560;
     var SLOT_Y_OFFSET = 130;
@@ -89,7 +93,8 @@ var game = (function () {
                 row.forEach(function (col) {
                     col.StopSpinning();
                     if (!calculated) {
-                        CalculateWinnings();
+                        var multiplier = CalculateWinnings();
+                        console.log(multiplier);
                         calculated = true;
                     }
                 });
@@ -125,25 +130,42 @@ var game = (function () {
         });
     }
     function CalculateWinnings() {
-        var multiplier = 1;
+        var multiplier;
+        var totalMultiplier = 1;
         var nameToMultiplier = {
-            python: 16,
-            java: 8,
-            typescript: 4,
-            html: 2,
-            cplusplus: 1,
-            csharp: 0.5,
-            swift: 0.25,
-            ruby: 0.125
+            python: 32,
+            java: 16,
+            typescript: 8,
+            html: 4,
+            cplusplus: 2,
+            csharp: 1,
+            swift: 0.5,
+            ruby: 0.25
         };
         for (var row = 0; row < 3; row++) {
+            multiplier = 1;
             for (var col = 0; col < 5; col++) {
                 // it does not think "itemName" is an attribute for some reason...
                 multiplier *= nameToMultiplier[slotItems[col][row].GetName()];
-                console.log(multiplier);
             }
+            switch (row) {
+                case 0:
+                    multiplierLineOne.setText("< " + Round(multiplier));
+                    break;
+                case 1:
+                    multiplierLineTwo.setText("< " + Round(multiplier));
+                    break;
+                case 2:
+                    multiplierLineThree.setText("< " + Round(multiplier));
+                    break;
+            }
+            totalMultiplier *= multiplier;
         }
-        return multiplier;
+        multiplierTotal.setText("> " + Round(totalMultiplier));
+        return Round(totalMultiplier);
+    }
+    function Round(input) {
+        return Math.round(input * 100) / 100;
     }
     function DrawMachine() {
         stage.addChild(new objects.Rectangle(0, 0, 700, 100, "black"));
@@ -154,6 +176,14 @@ var game = (function () {
         stage.addChild(new objects.Image("./Assets/images/machineParts/slots.png", 350, 300, true));
         playButton = new objects.Button("./Assets/images/buttons/play.png", 10, 500, false, startSpinning);
         stage.addChild(playButton);
+        multiplierLineOne = new objects.Label("< ", "20px", "Consolas", "green", 625, 170, false);
+        stage.addChild(multiplierLineOne);
+        multiplierLineTwo = new objects.Label("< ", "20px", "Consolas", "green", 625, 295, false);
+        stage.addChild(multiplierLineTwo);
+        multiplierLineThree = new objects.Label("< ", "20px", "Consolas", "green", 625, 425, false);
+        stage.addChild(multiplierLineThree);
+        multiplierTotal = new objects.Label("> ", "20px", "Consolas", "green", 625, 555, false);
+        stage.addChild(multiplierTotal);
     }
     function Main() {
         GenerateSlotItems();

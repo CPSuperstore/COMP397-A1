@@ -30,10 +30,10 @@ var objects;
         };
         WheelItem.prototype.ChangeItem = function (item) {
             this.SetImage(item);
-            this.width = this.getBounds().width;
-            this.height = this.getBounds().height;
+            this.width = this.image.width;
+            this.height = this.image.height;
             this.RecenterImage();
-            this.itemName = item.substring(item.lastIndexOf("/") + 1);
+            item = item.substring(item.lastIndexOf("/") + 1);
             this.itemName = item.substring(0, item.indexOf("."));
         };
         WheelItem.prototype.SetPosition = function (x, y) {

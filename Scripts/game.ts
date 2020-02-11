@@ -7,6 +7,11 @@ let game = (function(){
     let stage:createjs.Stage;
     let playButton:objects.Button;
     let slotItems:objects.WheelItem[][];
+
+    let multiplierLineOne:objects.Label;
+    let multiplierLineTwo:objects.Label;
+    let multiplierLineThree:objects.Label;
+    let multiplierTotal:objects.Label;
     // Array Structure:
     // [
     //  1  | 1  | 1  | 1  | 1 
@@ -20,7 +25,7 @@ let game = (function(){
     //  9  | 9  | 9  | 9  | 9 
     //  10 | 10 | 10 | 10 | 10
     // ]
-    let calculated:boolean;
+    let calculated:boolean = true;
 
     const SLOT_START_X:number[] = [135, 245, 350, 460, 570];
     const SLOT_START_Y:number = 560;
@@ -97,7 +102,8 @@ let game = (function(){
                 row.forEach(col => {
                     col.StopSpinning();
                     if (!calculated){
-                        CalculateWinnings();
+                        let multiplier:number = CalculateWinnings();
+                        console.log(multiplier);
                         calculated = true;
                     }
                     
@@ -136,27 +142,48 @@ let game = (function(){
         });
     }
     function CalculateWinnings():number{
-        let multiplier:number = 1;
+        let multiplier:number;
+        let totalMultiplier:number = 1;
 
+        
         var nameToMultiplier: {[key: string]: number} = {
-            python: 16,
-            java: 8,
-            typescript: 4,
-            html: 2,
-            cplusplus: 1,
-            csharp: 0.5,
-            swift: 0.25,
-            ruby: 0.125
+            python: 32,
+            java: 16,
+            typescript: 8,
+            html: 4,
+            cplusplus: 2,
+            csharp: 1,
+            swift: 0.5,
+            ruby: 0.25
         }
 
         for (let row = 0; row < 3; row++) {
+            multiplier = 1;
+
             for (let col = 0; col < 5; col++) {
                 // it does not think "itemName" is an attribute for some reason...
                 multiplier *= nameToMultiplier[slotItems[col][row].GetName()];
-                console.log(multiplier);
             }      
+            switch (row){
+                case 0:
+                    multiplierLineOne.setText("< " + Round(multiplier));
+                    break;
+                case 1:
+                    multiplierLineTwo.setText("< " + Round(multiplier));
+                    break;
+                case 2:
+                    multiplierLineThree.setText("< " + Round(multiplier));
+                    break;
+            }
+            totalMultiplier *= multiplier;
+
         }
-        return multiplier;
+        multiplierTotal.setText("> " + Round(totalMultiplier));
+        return Round(totalMultiplier);
+    }
+
+    function Round(input:number):number{
+        return Math.round(input * 100) / 100;
     }
 
     function DrawMachine(): void{
@@ -172,6 +199,19 @@ let game = (function(){
     
         playButton = new objects.Button("./Assets/images/buttons/play.png", 10, 500, false, startSpinning);
         stage.addChild(playButton);
+
+        multiplierLineOne = new objects.Label("< ", "20px", "Consolas", "green", 625, 170, false);
+        stage.addChild(multiplierLineOne);
+
+        multiplierLineTwo = new objects.Label("< ", "20px", "Consolas", "green", 625, 295, false);
+        stage.addChild(multiplierLineTwo);
+
+        multiplierLineThree = new objects.Label("< ", "20px", "Consolas", "green", 625, 425, false);
+        stage.addChild(multiplierLineThree);
+
+        multiplierTotal = new objects.Label("> ", "20px", "Consolas", "green", 625, 555, false);
+        stage.addChild(multiplierTotal);
+
     }
 
     function Main():void{
