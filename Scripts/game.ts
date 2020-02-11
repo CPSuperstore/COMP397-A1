@@ -11,8 +11,8 @@ let game = (function(){
     let multiplierLineTwo:objects.Label;
     let multiplierLineThree:objects.Label;
     let multiplierTotal:objects.Label;
-
-
+    let jackpotTotal:objects.Label;
+    
     // Array Structure:
     // [
     //  1  | 1  | 1  | 1  | 1 
@@ -35,10 +35,23 @@ let game = (function(){
     let wallet:number = -1;
     let walletLabel: objects.Label;
 
+    let cheatModeCheckBox:HTMLInputElement;
+
     const SLOT_START_X:number[] = [135, 245, 350, 460, 570];
     const SLOT_START_Y:number = 560;
     const SLOT_Y_OFFSET = 130;
     const SPINNER_ROWS = 10;
+    const NAME_TO_MULTIPLIER: {[key: string]: number} = {
+        python:         3.25,
+        java:           3,
+        typescript:     2.75,
+        html:           1.5,
+        cplusplus:      1.25,
+        csharp:         1,
+        swift:          0.5,
+        ruby:           0.25
+    }
+    const JACKPOT_VALUE = NAME_TO_MULTIPLIER.python ** 15;
 
     function ResetGame(reloadText:boolean=true, walletAmount:number=1000, bet:number=0):void{
         if (reloadText){
@@ -169,27 +182,18 @@ let game = (function(){
     function CalculateWinnings():number{
         let multiplier:number;
         let totalMultiplier:number = 1;
-
-        
-        var nameToMultiplier: {[key: string]: number} = {
-            python:         32,
-            java:           16,
-            typescript:     8,
-            html:           4,
-            cplusplus:      2,
-            csharp:         1,
-            swift:          0.5,
-            ruby:           0.25
-        }
+        let jackpotCount:number = 0;
+        let slotName:string;
 
         for (let row = 0; row < 3; row++) {
             multiplier = 1;
 
             for (let col = 0; col < 5; col++) {
-                // it does not think "itemName" is an attribute for some reason...
-                multiplier *= nameToMultiplier[
-                    slotItems[col][slotItems[col].length - row - 1].GetName()
-                ];
+                slotName = slotItems[col][slotItems[col].length - row - 1].GetName();
+                multiplier *= NAME_TO_MULTIPLIER[slotName];
+                if (slotName == "python"){
+                    jackpotCount++;
+                }
             }      
             switch (row){
                 case 0:
@@ -205,6 +209,9 @@ let game = (function(){
             totalMultiplier *= multiplier;
 
         }
+        if (jackpotCount == 15){
+            alert("jackpot!!!!!!")
+        }
         multiplierTotal.setText("Total: x" + Round(totalMultiplier));
         return Round(totalMultiplier);
     }
@@ -213,9 +220,20 @@ let game = (function(){
         return Math.round(input * 100) / 100;
     }
 
+    function QuitGame(): void{
+        stage.removeAllChildren();
+        stage.addChild(new objects.Rectangle(0, 0, 700, 700, "black"));
+        stage.addChild(new objects.Label("Your Final Payout:", "35px", "Consolas", "green", 10, 10, false));
+        stage.addChild(new objects.Label("$" + wallet, "35px", "Consolas", "green", 10, 50, false));
+        stage.addChild( new objects.Button("./Assets/images/buttons/reset.png", 10, 100, false, function(){
+            stage.removeAllChildren();
+            ResetGame(false);
+            Main();
+        }));
+
+    }
+
     function DrawMachine(): void{
-
-
         stage.addChild(new objects.Rectangle(0, 0, 700, 100, "black"));
         stage.addChild(new objects.Rectangle(0, 500, 700, 200, "black"));
         stage.addChild(new objects.Rectangle(0, 0, 75, 700, "black"));
@@ -235,11 +253,12 @@ let game = (function(){
         stage.addChild( new objects.Button("./Assets/images/buttons/plus100.png", 412, 500, false, function(){
             ChangeBetAmount(100);
         }));
+        stage.addChild( new objects.Button("./Assets/images/buttons/allIn.png", 546, 500, false, function(){
+            ChangeBetAmount(wallet);
+        }));
 
         stage.addChild( new objects.Button("./Assets/images/buttons/reset.png", 10, 635, false, ResetGame));
-        stage.addChild( new objects.Button("./Assets/images/buttons/quit.png", 144, 635, false, function(){
-            ChangeBetAmount(100);
-        }));
+        stage.addChild( new objects.Button("./Assets/images/buttons/quit.png", 144, 635, false, QuitGame));
 
         multiplierLineOne = new objects.Label("x?", "20px", "Consolas", "green", 625, 170, false);
         stage.addChild(multiplierLineOne);
@@ -259,11 +278,17 @@ let game = (function(){
         walletLabel = new objects.Label("Wallet: $" + wallet, "30px", "Consolas", "green", 10, 600, false);
         stage.addChild(walletLabel);
 
+        jackpotTotal = new objects.Label("Jackpot (x" + Round(JACKPOT_VALUE) + "): $0", "25px", "Consolas", "green", 278, 600, false)
+        stage.addChild(jackpotTotal);
     }
 
     function Main():void{
         GenerateSlotItems();
         DrawMachine();
+        cheatModeCheckBox = <HTMLInputElement>document.body.querySelector("#cheatMode");
+        cheatModeCheckBox.addEventListener("click", () => {
+            cheatMode = cheatModeCheckBox.checked;
+        });
     }
 
     function ChangeBetAmount(delta:number, updateWallet:boolean=true){
@@ -275,6 +300,7 @@ let game = (function(){
         if (wallet < 0){
             ChangeBetAmount(wallet);
         }
+        jackpotTotal.setText("Jackpot (x" + Round(JACKPOT_VALUE) + "): $" + Round(JACKPOT_VALUE * betAmount));
     }
 
     function ChangeWallet(delta:number){
