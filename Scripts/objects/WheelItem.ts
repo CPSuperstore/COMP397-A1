@@ -16,6 +16,17 @@ module objects{
             return this.itemName
         }
 
+        public ChangeItem(item:string){
+            this.SetImage(item);
+
+            this.width = this.getBounds().width;
+            this.height = this.getBounds().height;
+            this.RecenterImage();
+            
+            this.itemName = item.substring(item.lastIndexOf("/") + 1);
+            this.itemName = item.substring(0, item.indexOf("."));
+        }
+
         public SetPosition(x:number, y:number){
             this.x = x;
             this.y = y;

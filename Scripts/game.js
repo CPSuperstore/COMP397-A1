@@ -106,7 +106,7 @@ var game = (function () {
                 var wheel = void 0;
                 if (reload) {
                     wheel = slotItems[i][j - 1];
-                    wheel.SetImage(GetImage().imageName);
+                    wheel.ChangeItem(GetImage().imageName);
                 }
                 else {
                     wheel = GetImage();

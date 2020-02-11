@@ -71,6 +71,10 @@ module objects
             this.image = new createjs.Bitmap(path).image;
         }
 
+        public RecenterImage():void{
+            this.regX = this.halfWidth;
+            this.regY = this.halfHeight;
+        }
 
         // CONSTRUCTOR
         constructor(imageString:string = "./Assets/images/placeholder.png", 
@@ -95,8 +99,7 @@ module objects
 
                 if(centered)
                 {
-                    this.regX = this.halfWidth;
-                    this.regY = this.halfHeight;
+                   this.RecenterImage();
                 }
             });
 

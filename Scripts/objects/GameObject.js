@@ -35,8 +35,7 @@ var objects;
                 _this.width = _this.getBounds().width;
                 _this.height = _this.getBounds().height;
                 if (centered) {
-                    _this.regX = _this.halfWidth;
-                    _this.regY = _this.halfHeight;
+                    _this.RecenterImage();
                 }
             });
             _this.position = new objects.Vector2(x, y, _this);
@@ -103,6 +102,10 @@ var objects;
         });
         GameObject.prototype.SetImage = function (path) {
             this.image = new createjs.Bitmap(path).image;
+        };
+        GameObject.prototype.RecenterImage = function () {
+            this.regX = this.halfWidth;
+            this.regY = this.halfHeight;
         };
         // PRIVATE METHODS
         GameObject.prototype._computeHalfWidth = function () {
