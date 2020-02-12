@@ -43,8 +43,8 @@ let game = (function(){
     const SLOT_Y_OFFSET = 130;
     const SPINNER_ROWS = 10;
     const NAME_TO_MULTIPLIER: {[key: string]: number} = {
-        python:         3,
-        java:           2.75,
+        python:         2,
+        java:           1.75,
         typescript:     1.5,
         html:           1.25,
         cplusplus:      1,

@@ -37,8 +37,8 @@ var game = (function () {
     var SLOT_Y_OFFSET = 130;
     var SPINNER_ROWS = 10;
     var NAME_TO_MULTIPLIER = {
-        python: 3,
-        java: 2.75,
+        python: 2,
+        java: 1.75,
         typescript: 1.5,
         html: 1.25,
         cplusplus: 1,
