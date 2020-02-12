@@ -12,6 +12,7 @@ let game = (function(){
     let multiplierLineThree:objects.Label;
     let multiplierTotal:objects.Label;
     let jackpotTotal:objects.Label;
+    let jackpotMessage:objects.SpinningLabel;
     
     // Array Structure:
     // [
@@ -33,7 +34,7 @@ let game = (function(){
     let betAmountLabel:objects.Label;
 
     let wallet:number = -1;
-    let walletLabel: objects.Label;
+    let walletLabel: objects.Label; 
 
     let cheatModeCheckBox:HTMLInputElement;
 
@@ -42,12 +43,12 @@ let game = (function(){
     const SLOT_Y_OFFSET = 130;
     const SPINNER_ROWS = 10;
     const NAME_TO_MULTIPLIER: {[key: string]: number} = {
-        python:         3.25,
-        java:           3,
-        typescript:     2.75,
-        html:           1.5,
-        cplusplus:      1.25,
-        csharp:         1,
+        python:         3,
+        java:           2.75,
+        typescript:     1.5,
+        html:           1.25,
+        cplusplus:      1,
+        csharp:         0.75,
         swift:          0.5,
         ruby:           0.25
     }
@@ -148,6 +149,9 @@ let game = (function(){
                 });
             });
         }
+        if (jackpotMessage != undefined){
+            jackpotMessage.Update();
+        }
     }
 
     function GenerateSlotItems(reload:boolean=false):void{
@@ -210,10 +214,16 @@ let game = (function(){
 
         }
         if (jackpotCount == 15){
-            alert("jackpot!!!!!!")
+            ShowJackpot()
         }
         multiplierTotal.setText("Total: x" + Round(totalMultiplier));
         return Round(totalMultiplier);
+    }
+    function ShowJackpot():void{
+        jackpotMessage = new objects.SpinningLabel("JACKPOT!!!!!", "40px", "Consolas", "red", 350, 350, function () {
+            stage.removeChild(jackpotMessage);
+        });
+        stage.addChild(jackpotMessage);
     }
 
     function Round(input:number):number{
@@ -225,7 +235,7 @@ let game = (function(){
         stage.addChild(new objects.Rectangle(0, 0, 700, 700, "black"));
         stage.addChild(new objects.Label("Your Final Payout:", "35px", "Consolas", "green", 10, 10, false));
         stage.addChild(new objects.Label("$" + wallet, "35px", "Consolas", "green", 10, 50, false));
-        stage.addChild( new objects.Button("./Assets/images/buttons/reset.png", 10, 100, false, function(){
+        stage.addChild(new objects.Button("./Assets/images/buttons/reset.png", 10, 100, false, function(){
             stage.removeAllChildren();
             ResetGame(false);
             Main();

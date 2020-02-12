@@ -11,6 +11,7 @@ var game = (function () {
     var multiplierLineThree;
     var multiplierTotal;
     var jackpotTotal;
+    var jackpotMessage;
     // Array Structure:
     // [
     //  1  | 1  | 1  | 1  | 1 
@@ -36,12 +37,12 @@ var game = (function () {
     var SLOT_Y_OFFSET = 130;
     var SPINNER_ROWS = 10;
     var NAME_TO_MULTIPLIER = {
-        python: 3.25,
-        java: 3,
-        typescript: 2.75,
-        html: 1.5,
-        cplusplus: 1.25,
-        csharp: 1,
+        python: 3,
+        java: 2.75,
+        typescript: 1.5,
+        html: 1.25,
+        cplusplus: 1,
+        csharp: 0.75,
         swift: 0.5,
         ruby: 0.25
     };
@@ -137,6 +138,9 @@ var game = (function () {
                 });
             });
         }
+        if (jackpotMessage != undefined) {
+            jackpotMessage.Update();
+        }
     }
     function GenerateSlotItems(reload) {
         if (reload === void 0) { reload = false; }
@@ -194,10 +198,16 @@ var game = (function () {
             totalMultiplier *= multiplier;
         }
         if (jackpotCount == 15) {
-            alert("jackpot!!!!!!");
+            ShowJackpot();
         }
         multiplierTotal.setText("Total: x" + Round(totalMultiplier));
         return Round(totalMultiplier);
+    }
+    function ShowJackpot() {
+        jackpotMessage = new objects.SpinningLabel("JACKPOT!!!!!", "40px", "Consolas", "red", 350, 350, function () {
+            stage.removeChild(jackpotMessage);
+        });
+        stage.addChild(jackpotMessage);
     }
     function Round(input) {
         return Math.round(input * 100) / 100;
