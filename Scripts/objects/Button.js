@@ -16,13 +16,21 @@ var objects;
 (function (objects) {
     var Button = /** @class */ (function (_super) {
         __extends(Button, _super);
-        // constructor
+        /**
+         *Creates an instance of Button.
+         * @param {string} imagePath - the path to the image file which will represent the button
+         * @param {number} [x=0] - the x position of the button
+         * @param {number} [y=0] - the y position of the button
+         * @param {boolean} [isCentered=false] - if the button's x,y position should be placed at its center
+         * @param {() => void} action - the callback function to run when the button is clicked
+         * @memberof Button
+         */
         function Button(imagePath, x, y, isCentered, action) {
-            if (imagePath === void 0) { imagePath = './Assets/images/button.png'; }
             if (x === void 0) { x = 0; }
             if (y === void 0) { y = 0; }
             if (isCentered === void 0) { isCentered = false; }
             var _this = _super.call(this, imagePath, x, y, isCentered) || this;
+            // set the mouse events
             _this.on("mouseover", _this.MouseOver);
             _this.on("mouseout", _this.MouseOut);
             _this.on("click", action);

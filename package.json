@@ -1,9 +1,38 @@
 {
-  "name": "lesson_2b_or_not_2b",
+  "name": "comp397_assignment1",
   "version": "1.0.0",
-  "description": "fun",
+  "description": "Use your accumulated knowledge of the programming language and tools described in class, the slot machine code provided and the graphics framework described in class to create a Simple Slot Machine game. You will need to translate the code from jQuery in order to make this work.",
+  "history": [
+    {
+      "date": "2020/01/25",
+      "description": "Project structure/repository setup"
+    },
+    {
+      "date": "2020/01/26",
+      "description": "Created image assets"
+    },
+    {
+      "date": "2020/02/10",
+      "description": "Built machine interface and added item cycling animations"
+    },
+    {
+      "date": "2020/02/11",
+      "description": "Added wallet, jackpot, and betting system"
+    },
+    {
+      "date": "2020/02/12",
+      "description": "Added UI elements, and jackpot detection/event"
+    }
+  ],
   "main": "game.js",
   "license": "MIT",
+  "author": {
+    "name": "Christopher Palazzolo",
+    "email": "cpalazzo@my.centennialcollege.ca",
+    "url": "http://cpsuperstore.pythonanywhere.com/",
+    "studentNumber": "300934032"
+  },
+  "creationDate": "2020/02/12",
   "dependencies": {
     "createjs": "^1.0.1",
     "easeljs": "^1.0.2",

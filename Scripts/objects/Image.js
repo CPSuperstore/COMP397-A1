@@ -18,7 +18,6 @@ var objects;
         __extends(Image, _super);
         // constructor
         function Image(imagePath, x, y, isCentered) {
-            if (imagePath === void 0) { imagePath = './Assets/images/button.png'; }
             if (x === void 0) { x = 0; }
             if (y === void 0) { y = 0; }
             if (isCentered === void 0) { isCentered = false; }
